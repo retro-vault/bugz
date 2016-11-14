@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1479154304 source:h:\bugz\inst_set.c
+	<stdint.h>
+	"inst_set.h"
+
+1479153709 h:\bugz\inst_set.h
+	<stdint.h>
+
+1479155574 source:h:\bugz\main.c
+	<stdio.h>
+	<stdlib.h>
+	<stdint.h>
+	<string.h>
+	<assert.h>
+	"inst_set.h"
+
