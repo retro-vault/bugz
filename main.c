@@ -1,3 +1,14 @@
+/*
+ * main.c
+ *
+ * BUGZ main entry point and entire dissasembly logic.
+ * 
+ * MIT License (see: LICENSE)
+ * copyright (c) 2016 tomaz stih
+ *
+ * 04.11.2016   tstih
+ *
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -10,17 +21,15 @@ uint8_t * read_file(char *fname, long *fsize) {
     FILE *f = fopen(fname, "rb");
     fseek(f, 0, SEEK_END);
     *fsize = ftell(f);
-    fseek(f, 0, SEEK_SET);  //same as rewind(f);
-
+    fseek(f, 0, SEEK_SET);  /* same as rewind(f); */
     uint8_t *bytes = malloc(*fsize + 1);
     fread(bytes, *fsize, 1, f);
     fclose(f);
-
     return bytes;
 }
 
 int compare_instruction(const void *opcode, const void *instruction) {
-    uint8_t length=((instruction_t*)instruction)->size, *b1=(uint8_t*)opcode, *b2=(uint8_t*)instruction, *msk=&(((instruction_t*)instruction)->omask);
+    uint8_t length=((instruction_t*)instruction)->size, *b1=(uint8_t*)opcode, *b2=(uint8_t*)instruction, *msk=(uint8_t*)(&(((instruction_t*)instruction)->omask));
     while (length--) {
             if ((*msk) == 0x01) { /* Opcode */
                 if (*b1-*b2) return *b1-*b2;
@@ -38,7 +47,7 @@ char* dissasemble(uint8_t* memory, uint16_t addr, uint16_t size, char* buffer) {
     while (addr < size) { /* Take a hike. */
 
         /* Fetch */
-        o1 = o2 = inst = NULL;
+        o1 = o2 = NULL; inst = 0;
         memcpy(&inst,&(memory[addr]),size-addr>=4?4:size-addr+1);
 
         /* Decode. Will set o1 and o2 to point into inst. */
@@ -52,7 +61,7 @@ char* dissasemble(uint8_t* memory, uint16_t addr, uint16_t size, char* buffer) {
                 else if (o1)
                     sprintf(buffer + strlen(buffer), instruction->mnemonic,*((uint16_t*)o1)&om1);
                 else
-                    sprintf(buffer + strlen(buffer), instruction->mnemonic);
+                    sprintf(buffer + strlen(buffer), "%s", instruction->mnemonic);
                 sprintf(buffer + strlen(buffer), "\n"); /* Separator. */
                 addr+=instruction->size;
         } else
@@ -62,13 +71,20 @@ char* dissasemble(uint8_t* memory, uint16_t addr, uint16_t size, char* buffer) {
     return buffer;
 }
 
-int main()
-{
-    long fsize;
-    uint8_t * rom=read_file("H:\\bugz\\48.rom", &fsize);
-    char buffer[100000];
+#define KILOBYTE 1024
 
-    printf(dissasemble(rom, 0, 100, buffer));
+int main(int argc, char* argv[])
+{
+    if (argc!=2) {
+        printf("Please provide filename as first (and only) argument.\r\n");
+        exit(1);
+    }
+
+    long fsize;
+    uint8_t * rom=read_file(argv[1], &fsize);
+    char buffer[KILOBYTE * KILOBYTE]; /* ought to do it */
+
+    puts(dissasemble(rom, 0, fsize, buffer));
 
     free(rom); /* Release memory before closing. */
     return 0;

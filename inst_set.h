@@ -1,3 +1,17 @@
+/*
+ * inst_set.h
+ *
+ * Instruction set (table) declaration.
+ * 
+ * MIT License (see: LICENSE)
+ * copyright (c) 2016 tomaz stih
+ *
+ * 04.11.2016   tstih
+ *
+ */
+#ifndef _INST_SET_H
+#define _INST_SET_H
+
 #include <stdint.h>
 
 typedef struct instruction_s {
@@ -13,3 +27,5 @@ extern instruction_t instruction_set[];
 extern uint32_t inst;
 extern uint8_t *o1, *o2;
 extern uint16_t om1,om2;
+
+#endif /* _INST_SET_H */
