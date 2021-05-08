@@ -5,8 +5,8 @@
 BUGZ is the worlds' smallest Z80 disassembler. It is written in C89 and 
 should compile on just about any machine with a standard library. 
 
- > One required function that might be missiong in older implementations 
- > in the `bsearch`. Luckily the GeeksForGeeks site provides the 
+ > One required function that might be missing in older implementations 
+ > is the `bsearch`. The GeeksForGeeks site provides the 
  > [default implementation](https://www.geeksforgeeks.org/binary-search/).  
 
 ## How does it work?
@@ -27,9 +27,9 @@ Mask values are
 | 05        | 8 bit jump operand (JR, DJNZ)       |
 | 06        | Index register offset operand (+/-) |
 
-This is how you interpret the values:
+### How to interpret the instruction table entry
 
-an instruction `DJNZ %hhd` will have opcode of `0x00000010`, and
+An instruction `DJNZ %hhd` will have opcode of `0x00000010`, and
 a mask of `0x00000501`. First byte of the mask is `0x01` which means
 that first byte in the memory must equal to first byte of the opcode 
 (i.e must be `0x10`). Second byte of the mask is `0x05` which means 
